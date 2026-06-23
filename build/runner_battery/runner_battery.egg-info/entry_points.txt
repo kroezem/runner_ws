@@ -1,2 +1,0 @@
-[console_scripts]
-battery_node = runner_battery.battery_node:main
