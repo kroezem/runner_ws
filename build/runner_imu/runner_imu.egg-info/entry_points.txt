@@ -1,0 +1,2 @@
+[console_scripts]
+bno085_node = runner_imu.bno085_node:main

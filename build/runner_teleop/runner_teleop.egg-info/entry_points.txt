@@ -1,0 +1,2 @@
+[console_scripts]
+teleop_node = runner_teleop.teleop_node:main

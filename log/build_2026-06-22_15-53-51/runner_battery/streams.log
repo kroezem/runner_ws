@@ -1,0 +1,24 @@
+[1.807s] Invoking command in '/home/matti/runner_ws/build/runner_battery': PYTHONPATH=/home/matti/runner_ws/build/runner_battery/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/matti/runner_ws/install/runner_battery/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/matti/runner_ws/build/runner_battery/build --no-deps symlink_data
+[2.275s] running develop
+[2.549s] running egg_info
+[2.549s] creating runner_battery.egg-info
+[2.575s] writing runner_battery.egg-info/PKG-INFO
+[2.575s] writing dependency_links to runner_battery.egg-info/dependency_links.txt
+[2.575s] writing entry points to runner_battery.egg-info/entry_points.txt
+[2.575s] writing requirements to runner_battery.egg-info/requires.txt
+[2.576s] writing top-level names to runner_battery.egg-info/top_level.txt
+[2.576s] writing manifest file 'runner_battery.egg-info/SOURCES.txt'
+[2.626s] reading manifest file 'runner_battery.egg-info/SOURCES.txt'
+[2.627s] writing manifest file 'runner_battery.egg-info/SOURCES.txt'
+[2.653s] running build_ext
+[2.660s] Creating /home/matti/runner_ws/install/runner_battery/lib/python3.12/site-packages/runner-battery.egg-link (link to .)
+[2.661s] Installing battery_node script to /home/matti/runner_ws/install/runner_battery/lib/runner_battery
+[2.661s] 
+[2.661s] Installed /home/matti/runner_ws/build/runner_battery
+[2.661s] running symlink_data
+[2.662s] creating /home/matti/runner_ws/install/runner_battery/share/ament_index
+[2.662s] creating /home/matti/runner_ws/install/runner_battery/share/ament_index/resource_index
+[2.662s] creating /home/matti/runner_ws/install/runner_battery/share/ament_index/resource_index/packages
+[2.662s] symbolically linking /home/matti/runner_ws/build/runner_battery/resource/runner_battery -> /home/matti/runner_ws/install/runner_battery/share/ament_index/resource_index/packages
+[2.662s] symbolically linking /home/matti/runner_ws/build/runner_battery/package.xml -> /home/matti/runner_ws/install/runner_battery/share/runner_battery
+[2.761s] Invoked command in '/home/matti/runner_ws/build/runner_battery' returned '0': PYTHONPATH=/home/matti/runner_ws/build/runner_battery/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/matti/runner_ws/install/runner_battery/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/matti/runner_ws/build/runner_battery/build --no-deps symlink_data

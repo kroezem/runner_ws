@@ -1,0 +1,24 @@
+[1.299s] Invoking command in '/home/matti/runner_ws/build/runner_bringup': PYTHONPATH=/home/matti/runner_ws/build/runner_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/matti/runner_ws/install/runner_bringup/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/matti/runner_ws/build/runner_bringup/build --no-deps symlink_data
+[1.734s] running develop
+[1.967s] running egg_info
+[1.967s] creating runner_bringup.egg-info
+[1.989s] writing runner_bringup.egg-info/PKG-INFO
+[1.989s] writing dependency_links to runner_bringup.egg-info/dependency_links.txt
+[1.990s] writing requirements to runner_bringup.egg-info/requires.txt
+[1.990s] writing top-level names to runner_bringup.egg-info/top_level.txt
+[1.990s] writing manifest file 'runner_bringup.egg-info/SOURCES.txt'
+[2.038s] reading manifest file 'runner_bringup.egg-info/SOURCES.txt'
+[2.039s] writing manifest file 'runner_bringup.egg-info/SOURCES.txt'
+[2.063s] running build_ext
+[2.063s] Creating /home/matti/runner_ws/install/runner_bringup/lib/python3.12/site-packages/runner-bringup.egg-link (link to .)
+[2.064s] 
+[2.064s] Installed /home/matti/runner_ws/build/runner_bringup
+[2.064s] running symlink_data
+[2.065s] creating /home/matti/runner_ws/install/runner_bringup/share/ament_index
+[2.065s] creating /home/matti/runner_ws/install/runner_bringup/share/ament_index/resource_index
+[2.065s] creating /home/matti/runner_ws/install/runner_bringup/share/ament_index/resource_index/packages
+[2.065s] symbolically linking /home/matti/runner_ws/build/runner_bringup/resource/runner_bringup -> /home/matti/runner_ws/install/runner_bringup/share/ament_index/resource_index/packages
+[2.066s] symbolically linking /home/matti/runner_ws/build/runner_bringup/package.xml -> /home/matti/runner_ws/install/runner_bringup/share/runner_bringup
+[2.067s] creating /home/matti/runner_ws/install/runner_bringup/share/runner_bringup/launch
+[2.067s] symbolically linking /home/matti/runner_ws/build/runner_bringup/launch/teleop.launch.py -> /home/matti/runner_ws/install/runner_bringup/share/runner_bringup/launch
+[2.168s] Invoked command in '/home/matti/runner_ws/build/runner_bringup' returned '0': PYTHONPATH=/home/matti/runner_ws/build/runner_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/matti/runner_ws/install/runner_bringup/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/matti/runner_ws/build/runner_bringup/build --no-deps symlink_data

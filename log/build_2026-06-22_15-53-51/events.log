@@ -1,0 +1,61 @@
+[0.000000] (-) TimerEvent: {}
+[0.000167] (-) JobUnselected: {'identifier': 'ldlidar_stl_ros2'}
+[0.000362] (-) JobUnselected: {'identifier': 'runner_bringup'}
+[0.000654] (-) JobUnselected: {'identifier': 'runner_imu'}
+[0.000852] (-) JobUnselected: {'identifier': 'runner_motor'}
+[0.000873] (-) JobUnselected: {'identifier': 'runner_teleop'}
+[0.001109] (runner_battery) JobQueued: {'identifier': 'runner_battery', 'dependencies': OrderedDict()}
+[0.001174] (runner_battery) JobStarted: {'identifier': 'runner_battery'}
+[0.099679] (-) TimerEvent: {}
+[0.199959] (-) TimerEvent: {}
+[0.300175] (-) TimerEvent: {}
+[0.400430] (-) TimerEvent: {}
+[0.500724] (-) TimerEvent: {}
+[0.600952] (-) TimerEvent: {}
+[0.701146] (-) TimerEvent: {}
+[0.801347] (-) TimerEvent: {}
+[0.901550] (-) TimerEvent: {}
+[1.001770] (-) TimerEvent: {}
+[1.101984] (-) TimerEvent: {}
+[1.202182] (-) TimerEvent: {}
+[1.302391] (-) TimerEvent: {}
+[1.402597] (-) TimerEvent: {}
+[1.502854] (-) TimerEvent: {}
+[1.603206] (-) TimerEvent: {}
+[1.703710] (-) TimerEvent: {}
+[1.804069] (-) TimerEvent: {}
+[1.807330] (runner_battery) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/matti/runner_ws/build/runner_battery/build', '--no-deps', 'symlink_data'], 'cwd': '/home/matti/runner_ws/build/runner_battery', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'CODEX_CI': '1', 'USER': 'matti', 'SSH_CLIENT': '100.125.118.91 52168 22', 'GIT_ASKPASS': '/home/matti/.vscode-server/cli/servers/Stable-fcf604774b9f2674b473065736ee75077e256353/server/extensions/git/dist/askpass.sh', 'SHLVL': '2', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/lib', 'BROWSER': '/home/matti/.vscode-server/cli/servers/Stable-fcf604774b9f2674b473065736ee75077e256353/server/bin/helpers/browser.sh', 'HOME': '/home/matti', 'TERM_PROGRAM_VERSION': '1.125.1', 'VSCODE_IPC_HOOK_CLI': '/tmp/vscode-ipc-5c6baf79-3c62-4389-b58f-252970b27ebd.sock', 'ROS_PYTHON_VERSION': '3', 'PAGER': 'cat', 'VSCODE_GIT_ASKPASS_MAIN': '/home/matti/.vscode-server/cli/servers/Stable-fcf604774b9f2674b473065736ee75077e256353/server/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/home/matti/.vscode-server/cli/servers/Stable-fcf604774b9f2674b473065736ee75077e256353/server/node', 'LC_CTYPE': 'C.UTF-8', 'VSCODE_PYTHON_AUTOACTIVATE_GUARD': '1', 'NO_COLOR': '1', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': '', 'COLCON_PREFIX_PATH': '/home/matti/runner_ws/install', 'ROS_DISTRO': 'jazzy', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'dumb', 'PATH': '/home/matti/.local/bin:/home/matti/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-arm64/vendor/aarch64-unknown-linux-musl/codex-path:/home/matti/.codex/tmp/arg0/codex-arg0QZj4FR:/home/matti/.npm-global/bin:/home/matti/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/matti/.vscode-server/data/User/globalStorage/github.copilot-chat/copilotCli:/home/matti/.vscode-server/cli/servers/Stable-fcf604774b9f2674b473065736ee75077e256353/server/bin/remote-cli:/home/matti/.local/bin:/home/matti/.npm-global/bin:/opt/ros/jazzy/bin:/home/matti/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'CODEX_SANDBOX_NETWORK_DISABLED': '1', 'LANG': 'C.UTF-8', 'GH_PAGER': 'cat', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'VSCODE_GIT_IPC_HANDLE': '/tmp/vscode-git-875c353bd1.sock', 'TERM_PROGRAM': 'vscode', 'AMENT_PREFIX_PATH': '/home/matti/runner_ws/install/runner_bringup:/home/matti/runner_ws/install/runner_teleop:/home/matti/runner_ws/install/runner_motor:/home/matti/runner_ws/install/runner_imu:/home/matti/runner_ws/install/ldlidar_stl_ros2:/opt/ros/jazzy', 'SHELL': '/bin/bash', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'CODEX_THREAD_ID': '019ef188-d501-7ec2-be2d-1902d21971a3', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'GIT_PAGER': 'cat', 'PWD': '/home/matti/runner_ws/build/runner_battery', 'LC_ALL': 'C.UTF-8', 'CODEX_MANAGED_PACKAGE_ROOT': '/home/matti/.npm-global/lib/node_modules/@openai/codex', 'COPILOT_DEBUG_NONCE': '833ad5dcafa75301ccbf2486705088cc', 'SSH_CONNECTION': '100.125.118.91 52168 100.71.188.1 22', 'XDG_DATA_DIRS': '/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/matti/runner_ws/build/runner_battery/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/matti/runner_ws/install/runner_battery/lib/python3.12/site-packages:/home/matti/runner_ws/build/runner_bringup:/home/matti/runner_ws/install/runner_bringup/lib/python3.12/site-packages:/home/matti/runner_ws/build/runner_teleop:/home/matti/runner_ws/install/runner_teleop/lib/python3.12/site-packages:/home/matti/runner_ws/build/runner_motor:/home/matti/runner_ws/install/runner_motor/lib/python3.12/site-packages:/home/matti/runner_ws/build/runner_imu:/home/matti/runner_ws/install/runner_imu/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'CODEX_MANAGED_BY_NPM': '1', 'CMAKE_PREFIX_PATH': '/home/matti/runner_ws/install/ldlidar_stl_ros2'}, 'shell': False}
+[1.904176] (-) TimerEvent: {}
+[2.004380] (-) TimerEvent: {}
+[2.104576] (-) TimerEvent: {}
+[2.204780] (-) TimerEvent: {}
+[2.276305] (runner_battery) StdoutLine: {'line': b'running develop\n'}
+[2.304976] (-) TimerEvent: {}
+[2.405286] (-) TimerEvent: {}
+[2.505500] (-) TimerEvent: {}
+[2.550373] (runner_battery) StdoutLine: {'line': b'running egg_info\n'}
+[2.550678] (runner_battery) StdoutLine: {'line': b'creating runner_battery.egg-info\n'}
+[2.575674] (runner_battery) StdoutLine: {'line': b'writing runner_battery.egg-info/PKG-INFO\n'}
+[2.576174] (runner_battery) StdoutLine: {'line': b'writing dependency_links to runner_battery.egg-info/dependency_links.txt\n'}
+[2.576412] (runner_battery) StdoutLine: {'line': b'writing entry points to runner_battery.egg-info/entry_points.txt\n'}
+[2.576607] (runner_battery) StdoutLine: {'line': b'writing requirements to runner_battery.egg-info/requires.txt\n'}
+[2.576816] (runner_battery) StdoutLine: {'line': b'writing top-level names to runner_battery.egg-info/top_level.txt\n'}
+[2.576946] (runner_battery) StdoutLine: {'line': b"writing manifest file 'runner_battery.egg-info/SOURCES.txt'\n"}
+[2.605608] (-) TimerEvent: {}
+[2.627120] (runner_battery) StdoutLine: {'line': b"reading manifest file 'runner_battery.egg-info/SOURCES.txt'\n"}
+[2.628014] (runner_battery) StdoutLine: {'line': b"writing manifest file 'runner_battery.egg-info/SOURCES.txt'\n"}
+[2.653587] (runner_battery) StdoutLine: {'line': b'running build_ext\n'}
+[2.660952] (runner_battery) StdoutLine: {'line': b'Creating /home/matti/runner_ws/install/runner_battery/lib/python3.12/site-packages/runner-battery.egg-link (link to .)\n'}
+[2.661971] (runner_battery) StdoutLine: {'line': b'Installing battery_node script to /home/matti/runner_ws/install/runner_battery/lib/runner_battery\n'}
+[2.662355] (runner_battery) StdoutLine: {'line': b'\n'}
+[2.662469] (runner_battery) StdoutLine: {'line': b'Installed /home/matti/runner_ws/build/runner_battery\n'}
+[2.662671] (runner_battery) StdoutLine: {'line': b'running symlink_data\n'}
+[2.662873] (runner_battery) StdoutLine: {'line': b'creating /home/matti/runner_ws/install/runner_battery/share/ament_index\n'}
+[2.662985] (runner_battery) StdoutLine: {'line': b'creating /home/matti/runner_ws/install/runner_battery/share/ament_index/resource_index\n'}
+[2.663075] (runner_battery) StdoutLine: {'line': b'creating /home/matti/runner_ws/install/runner_battery/share/ament_index/resource_index/packages\n'}
+[2.663192] (runner_battery) StdoutLine: {'line': b'symbolically linking /home/matti/runner_ws/build/runner_battery/resource/runner_battery -> /home/matti/runner_ws/install/runner_battery/share/ament_index/resource_index/packages\n'}
+[2.663412] (runner_battery) StdoutLine: {'line': b'symbolically linking /home/matti/runner_ws/build/runner_battery/package.xml -> /home/matti/runner_ws/install/runner_battery/share/runner_battery\n'}
+[2.705753] (-) TimerEvent: {}
+[2.761087] (runner_battery) CommandEnded: {'returncode': 0}
+[2.795484] (runner_battery) JobEnded: {'identifier': 'runner_battery', 'rc': 0}
+[2.796575] (-) EventReactorShutdown: {}

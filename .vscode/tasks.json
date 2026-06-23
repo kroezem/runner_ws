@@ -1,0 +1,108 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Runner: Bench",
+      "type": "shell",
+      "command": "source /opt/ros/jazzy/setup.bash && source ~/runner_ws/install/setup.bash && ros2 launch runner_bringup bench.launch.py",
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always",
+        "focus": false,
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: SLAM",
+      "type": "shell",
+      "command": "source /opt/ros/jazzy/setup.bash && source ~/runner_ws/install/setup.bash && ros2 launch runner_bringup slam.launch.py",
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always",
+        "focus": false,
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Teleop",
+      "type": "shell",
+      "command": "source /opt/ros/jazzy/setup.bash && source ~/runner_ws/install/setup.bash && ros2 launch runner_bringup teleop.launch.py",
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always",
+        "focus": false,
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Battery",
+      "type": "shell",
+      "command": "source /opt/ros/jazzy/setup.bash && source ~/runner_ws/install/setup.bash && ros2 run runner_battery battery_node",
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always",
+        "focus": false,
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Foxglove",
+      "type": "shell",
+      "command": "source /opt/ros/jazzy/setup.bash && source ~/runner_ws/install/setup.bash && ros2 launch foxglove_bridge foxglove_bridge_launch.xml",
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always",
+        "focus": false,
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Map Session",
+      "dependsOn": [
+        "Runner: SLAM",
+        "Runner: Battery",
+        "Runner: Foxglove"
+      ],
+      "dependsOrder": "parallel",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Drive Session",
+      "dependsOn": [
+        "Runner: Bench",
+        "Runner: Teleop",
+        "Runner: Battery",
+        "Runner: Foxglove"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Stop All",
+      "type": "shell",
+      "command": "source /opt/ros/jazzy/setup.bash && pkill -f 'ros2 launch' || true; pkill -f 'ros2 run' || true; pkill -f rf2o || true; pkill -f slam_toolbox || true; pkill -f ldlidar || true; pkill -f foxglove || true; sleep 1 && ros2 daemon stop && ros2 daemon start; ros2 node list",
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always",
+        "focus": false,
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    }
+  ]
+}

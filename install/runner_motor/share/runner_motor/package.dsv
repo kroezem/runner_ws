@@ -1,0 +1,9 @@
+source;share/runner_motor/hook/pythonpath.ps1
+source;share/runner_motor/hook/pythonpath.dsv
+source;share/runner_motor/hook/pythonpath.sh
+source;share/runner_motor/hook/ament_prefix_path.ps1
+source;share/runner_motor/hook/ament_prefix_path.dsv
+source;share/runner_motor/hook/ament_prefix_path.sh
+source;../../build/runner_motor/share/runner_motor/hook/pythonpath_develop.ps1
+source;../../build/runner_motor/share/runner_motor/hook/pythonpath_develop.dsv
+source;../../build/runner_motor/share/runner_motor/hook/pythonpath_develop.sh

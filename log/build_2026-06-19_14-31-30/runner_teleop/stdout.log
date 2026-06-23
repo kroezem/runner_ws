@@ -1,0 +1,22 @@
+running develop
+running egg_info
+creating runner_teleop.egg-info
+writing runner_teleop.egg-info/PKG-INFO
+writing dependency_links to runner_teleop.egg-info/dependency_links.txt
+writing entry points to runner_teleop.egg-info/entry_points.txt
+writing requirements to runner_teleop.egg-info/requires.txt
+writing top-level names to runner_teleop.egg-info/top_level.txt
+writing manifest file 'runner_teleop.egg-info/SOURCES.txt'
+reading manifest file 'runner_teleop.egg-info/SOURCES.txt'
+writing manifest file 'runner_teleop.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/matti/runner_ws/install/runner_teleop/lib/python3.12/site-packages/runner-teleop.egg-link (link to .)
+Installing teleop_node script to /home/matti/runner_ws/install/runner_teleop/lib/runner_teleop
+
+Installed /home/matti/runner_ws/build/runner_teleop
+running symlink_data
+creating /home/matti/runner_ws/install/runner_teleop/share/ament_index
+creating /home/matti/runner_ws/install/runner_teleop/share/ament_index/resource_index
+creating /home/matti/runner_ws/install/runner_teleop/share/ament_index/resource_index/packages
+symbolically linking /home/matti/runner_ws/build/runner_teleop/resource/runner_teleop -> /home/matti/runner_ws/install/runner_teleop/share/ament_index/resource_index/packages
+symbolically linking /home/matti/runner_ws/build/runner_teleop/package.xml -> /home/matti/runner_ws/install/runner_teleop/share/runner_teleop

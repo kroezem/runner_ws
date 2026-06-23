@@ -1,0 +1,48 @@
+[0.000000] (-) TimerEvent: {}
+[0.000540] (runner_imu) JobQueued: {'identifier': 'runner_imu', 'dependencies': OrderedDict()}
+[0.000592] (runner_imu) JobStarted: {'identifier': 'runner_imu'}
+[0.099613] (-) TimerEvent: {}
+[0.199943] (-) TimerEvent: {}
+[0.300295] (-) TimerEvent: {}
+[0.400859] (-) TimerEvent: {}
+[0.501161] (-) TimerEvent: {}
+[0.601451] (-) TimerEvent: {}
+[0.701769] (-) TimerEvent: {}
+[0.802064] (-) TimerEvent: {}
+[0.902360] (-) TimerEvent: {}
+[1.002696] (-) TimerEvent: {}
+[1.094262] (runner_imu) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/matti/runner_ws/build/runner_imu/build', '--no-deps', 'symlink_data'], 'cwd': '/home/matti/runner_ws/build/runner_imu', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'matti', 'SSH_CLIENT': '100.125.118.91 55157 22', 'GIT_ASKPASS': '/home/matti/.vscode-server/cli/servers/Stable-6928394f91b684055b873eecb8bc281365131f1c/server/extensions/git/dist/askpass.sh', 'SHLVL': '2', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/lib', 'BROWSER': '/home/matti/.vscode-server/cli/servers/Stable-6928394f91b684055b873eecb8bc281365131f1c/server/bin/helpers/browser.sh', 'HOME': '/home/matti', 'OLDPWD': '/home/matti/runner_ws', 'TERM_PROGRAM_VERSION': '1.124.2', 'VSCODE_IPC_HOOK_CLI': '/tmp/vscode-ipc-c3063da1-8229-43fe-aede-3fb5fcb5ad4e.sock', 'ROS_PYTHON_VERSION': '3', 'VSCODE_GIT_ASKPASS_MAIN': '/home/matti/.vscode-server/cli/servers/Stable-6928394f91b684055b873eecb8bc281365131f1c/server/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/home/matti/.vscode-server/cli/servers/Stable-6928394f91b684055b873eecb8bc281365131f1c/server/node', 'VSCODE_PYTHON_AUTOACTIVATE_GUARD': '1', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'COLCON_PREFIX_PATH': '/home/matti/runner_ws/install', 'ROS_DISTRO': 'jazzy', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm-256color', 'PATH': '/home/matti/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/matti/.vscode-server/data/User/globalStorage/github.copilot-chat/copilotCli:/home/matti/.vscode-server/cli/servers/Stable-6928394f91b684055b873eecb8bc281365131f1c/server/bin/remote-cli:/opt/ros/jazzy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'LANG': 'C.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'VSCODE_GIT_IPC_HANDLE': '/tmp/vscode-git-875c353bd1.sock', 'TERM_PROGRAM': 'vscode', 'AMENT_PREFIX_PATH': '/home/matti/runner_ws/install/runner_imu:/opt/ros/jazzy', 'SHELL': '/bin/bash', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'PWD': '/home/matti/runner_ws/build/runner_imu', 'COPILOT_DEBUG_NONCE': '833ad5dcafa75301ccbf2486705088cc', 'SSH_CONNECTION': '100.125.118.91 55157 100.71.188.1 22', 'XDG_DATA_DIRS': '/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/matti/runner_ws/build/runner_imu/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/matti/runner_ws/install/runner_imu/lib/python3.12/site-packages:/home/matti/runner_ws/install/runner_imu/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1'}, 'shell': False}
+[1.102777] (-) TimerEvent: {}
+[1.203087] (-) TimerEvent: {}
+[1.303377] (-) TimerEvent: {}
+[1.403669] (-) TimerEvent: {}
+[1.486943] (runner_imu) StdoutLine: {'line': b'running develop\n'}
+[1.503752] (-) TimerEvent: {}
+[1.604016] (-) TimerEvent: {}
+[1.704300] (-) TimerEvent: {}
+[1.704562] (runner_imu) StdoutLine: {'line': b'running egg_info\n'}
+[1.704839] (runner_imu) StdoutLine: {'line': b'creating runner_imu.egg-info\n'}
+[1.725631] (runner_imu) StdoutLine: {'line': b'writing runner_imu.egg-info/PKG-INFO\n'}
+[1.726023] (runner_imu) StdoutLine: {'line': b'writing dependency_links to runner_imu.egg-info/dependency_links.txt\n'}
+[1.726238] (runner_imu) StdoutLine: {'line': b'writing entry points to runner_imu.egg-info/entry_points.txt\n'}
+[1.726400] (runner_imu) StdoutLine: {'line': b'writing requirements to runner_imu.egg-info/requires.txt\n'}
+[1.726523] (runner_imu) StdoutLine: {'line': b'writing top-level names to runner_imu.egg-info/top_level.txt\n'}
+[1.726687] (runner_imu) StdoutLine: {'line': b"writing manifest file 'runner_imu.egg-info/SOURCES.txt'\n"}
+[1.770070] (runner_imu) StdoutLine: {'line': b"reading manifest file 'runner_imu.egg-info/SOURCES.txt'\n"}
+[1.770797] (runner_imu) StdoutLine: {'line': b"writing manifest file 'runner_imu.egg-info/SOURCES.txt'\n"}
+[1.794810] (runner_imu) StdoutLine: {'line': b'running build_ext\n'}
+[1.800630] (runner_imu) StdoutLine: {'line': b'Creating /home/matti/runner_ws/install/runner_imu/lib/python3.12/site-packages/runner-imu.egg-link (link to .)\n'}
+[1.801566] (runner_imu) StdoutLine: {'line': b'Installing bno085_node script to /home/matti/runner_ws/install/runner_imu/lib/runner_imu\n'}
+[1.801934] (runner_imu) StdoutLine: {'line': b'\n'}
+[1.802027] (runner_imu) StdoutLine: {'line': b'Installed /home/matti/runner_ws/build/runner_imu\n'}
+[1.802138] (runner_imu) StdoutLine: {'line': b'running symlink_data\n'}
+[1.802269] (runner_imu) StdoutLine: {'line': b'creating /home/matti/runner_ws/install/runner_imu/share/ament_index\n'}
+[1.802371] (runner_imu) StdoutLine: {'line': b'creating /home/matti/runner_ws/install/runner_imu/share/ament_index/resource_index\n'}
+[1.802510] (runner_imu) StdoutLine: {'line': b'creating /home/matti/runner_ws/install/runner_imu/share/ament_index/resource_index/packages\n'}
+[1.802645] (runner_imu) StdoutLine: {'line': b'symbolically linking /home/matti/runner_ws/build/runner_imu/resource/runner_imu -> /home/matti/runner_ws/install/runner_imu/share/ament_index/resource_index/packages\n'}
+[1.802756] (runner_imu) StdoutLine: {'line': b'symbolically linking /home/matti/runner_ws/build/runner_imu/package.xml -> /home/matti/runner_ws/install/runner_imu/share/runner_imu\n'}
+[1.804377] (-) TimerEvent: {}
+[1.894888] (runner_imu) CommandEnded: {'returncode': 0}
+[1.905297] (-) TimerEvent: {}
+[1.909081] (runner_imu) JobEnded: {'identifier': 'runner_imu', 'rc': 0}
+[1.909906] (-) EventReactorShutdown: {}

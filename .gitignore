@@ -1,0 +1,32 @@
+# ROS 2 colcon build artifacts
+build/
+install/
+log/
+
+# ROS bags
+*.db3
+*.mcap
+bags/
+
+# Saved maps (large binary files, regenerate per environment)
+maps/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+*.so
+
+# VS Code — tasks and extensions belong in the repo, personal settings don't
+.vscode/settings.json
+.vscode/launch.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / env
+.env
+*.pem
