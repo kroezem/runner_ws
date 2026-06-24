@@ -43,6 +43,11 @@ class Bno085Node(Node):
         m.angular_velocity.x, m.angular_velocity.y, m.angular_velocity.z = self.bno.gyro
         m.linear_acceleration.x, m.linear_acceleration.y, m.linear_acceleration.z = \
             self.bno.linear_acceleration
+        m.orientation_covariance[8] = 0.005
+        m.angular_velocity_covariance[8] = 0.005
+        m.linear_acceleration_covariance[0] = 0.1
+        m.linear_acceleration_covariance[4] = 0.1
+        m.linear_acceleration_covariance[8] = 0.1
         self.pub.publish(m)
 
 def main():
