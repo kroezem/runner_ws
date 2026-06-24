@@ -39,9 +39,9 @@ class TeleopNode(Node):
     def on_joy(self, msg: Joy):
         steer = msg.axes[AXIS_STEER] * (-1.0 if INVERT_STEER else 1.0)
         throt = _throttle_curve(_trigger(msg.axes[AXIS_THROT], INVERT_THROT))
-        brake = _trigger(msg.axes[AXIS_BRAKE], INVERT_BRAKE)  # negate: L2 is inverted
+        brake = _throttle_curve(_trigger(msg.axes[AXIS_BRAKE], INVERT_BRAKE))
         self._steer = steer
-        self._cmd = -brake if brake > 0.05 else throt
+        self._cmd = -brake if brake > 0.0 else throt
 
     def publish_cmd(self):
         msg = Twist()
