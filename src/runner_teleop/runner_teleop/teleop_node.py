@@ -12,11 +12,18 @@ AXIS_THROT = 5   # R2: +1.0=released, -1.0=full press
 INVERT_STEER = False
 INVERT_THROT = True
 INVERT_BRAKE = True
+THROTTLE_DEADZONE = 0.05
 
 def _trigger(raw: float, invert: bool) -> float:
     """Normalise a trigger axis to 0.0–1.0. Handles both polarities."""
     v = (raw + 1.0) / 2.0   # -1…+1 → 0…1
     return 1.0 - v if invert else v
+
+def _throttle_curve(t: float) -> float:
+    if t < THROTTLE_DEADZONE:
+        return 0.0
+    scaled = (t - THROTTLE_DEADZONE) / (1.0 - THROTTLE_DEADZONE)
+    return scaled ** 3
 
 class TeleopNode(Node):
     def __init__(self):
@@ -31,7 +38,7 @@ class TeleopNode(Node):
 
     def on_joy(self, msg: Joy):
         steer = msg.axes[AXIS_STEER] * (-1.0 if INVERT_STEER else 1.0)
-        throt = _trigger(msg.axes[AXIS_THROT], INVERT_THROT)
+        throt = _throttle_curve(_trigger(msg.axes[AXIS_THROT], INVERT_THROT))
         brake = _trigger(msg.axes[AXIS_BRAKE], INVERT_BRAKE)  # negate: L2 is inverted
         self._steer = steer
         self._cmd = -brake if brake > 0.05 else throt
