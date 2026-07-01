@@ -2,42 +2,57 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Runner: Bench",
+      "label": "Runner: Lidar",
       "type": "shell",
-      "command": "source /opt/ros/jazzy/setup.bash && source ~/runner_ws/install/setup.bash && ros2 launch runner_bringup bench.launch.py",
-      "presentation": {
-        "panel": "dedicated",
-        "reveal": "always",
-        "focus": false,
-        "clear": true,
-        "showReuseMessage": false
-      },
+      "command": "ros2 launch runner_bringup lidar.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: IMU",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup imu.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: RF2O",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup rf2o.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: EKF",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup ekf.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: EKF Minimal",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup ekf_minimal.launch.py",
       "problemMatcher": []
     },
     {
       "label": "Runner: SLAM",
       "type": "shell",
-      "command": "source /opt/ros/jazzy/setup.bash && source ~/runner_ws/install/setup.bash && ros2 launch runner_bringup slam.launch.py",
-      "presentation": {
-        "panel": "dedicated",
-        "reveal": "always",
-        "focus": false,
-        "clear": true,
-        "showReuseMessage": false
-      },
+      "command": "ros2 launch runner_bringup slam.launch.py",
       "problemMatcher": []
     },
     {
-      "label": "Runner: Teleop",
+      "label": "Runner: TF Static",
       "type": "shell",
-      "command": "source /opt/ros/jazzy/setup.bash && source ~/runner_ws/install/setup.bash && ros2 launch runner_bringup teleop.launch.py",
-      "presentation": {
-        "panel": "dedicated",
-        "reveal": "always",
-        "focus": false,
-        "clear": true,
-        "showReuseMessage": false
-      },
+      "command": "ros2 launch runner_bringup tf_static.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Map",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup map.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Drive",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup drive.launch.py",
       "problemMatcher": []
     },
     {
@@ -64,31 +79,6 @@
         "clear": true,
         "showReuseMessage": false
       },
-      "problemMatcher": []
-    },
-    {
-      "label": "Runner: Map Session",
-      "dependsOn": [
-        "Runner: SLAM",
-        "Runner: Battery",
-        "Runner: Foxglove"
-      ],
-      "dependsOrder": "parallel",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Runner: Drive Session",
-      "dependsOn": [
-        "Runner: Bench",
-        "Runner: Teleop",
-        "Runner: Battery",
-        "Runner: Foxglove"
-      ],
-      "dependsOrder": "parallel",
       "problemMatcher": []
     },
     {
