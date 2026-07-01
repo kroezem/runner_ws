@@ -16,7 +16,7 @@ class Bno085Node(Node):
         super().__init__("bno085")
         self.pub = self.create_publisher(Imu, "/imu/data", 50)
         self._hardware_reset()
-        uart = serial.Serial(UART_PORT, baudrate=UART_BAUD, timeout=0.01)
+        uart = serial.Serial(UART_PORT, baudrate=UART_BAUD, timeout=10.01)
         self.bno = BNO08X_UART(uart)
         for f in (adafruit_bno08x.BNO_REPORT_ROTATION_VECTOR,
                   adafruit_bno08x.BNO_REPORT_GYROSCOPE,
