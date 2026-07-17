@@ -14,20 +14,6 @@ def generate_launch_description():
 
     return LaunchDescription([
         Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            arguments=[
-                '--x', '0',
-                '--y', '0',
-                '--z', '0',
-                '--roll', '0',
-                '--pitch', '0',
-                '--yaw', '1.5708',
-                '--frame-id', 'base_link',
-                '--child-frame-id', 'imu_link',
-            ],
-        ),
-        Node(
             package='robot_localization',
             executable='ekf_node',
             name='ekf_node',
