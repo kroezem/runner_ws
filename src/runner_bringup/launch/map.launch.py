@@ -20,6 +20,8 @@ def generate_launch_description():
         IncludeLaunchDescription(PythonLaunchDescriptionSource(
             os.path.join(launch_dir, 'rf2o.launch.py'))),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(
+            os.path.join(launch_dir, 'imu.launch.py'))),
+        IncludeLaunchDescription(PythonLaunchDescriptionSource(
             os.path.join(launch_dir, 'ekf.launch.py'))),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(
             os.path.join(launch_dir, 'slam.launch.py'))),
