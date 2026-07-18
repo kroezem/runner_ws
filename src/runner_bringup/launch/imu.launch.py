@@ -7,5 +7,7 @@ def generate_launch_description():
         Node(
             package='runner_imu',
             executable='bno085_node',
+            respawn=True,
+            respawn_delay=2.0,
         ),
     ])
