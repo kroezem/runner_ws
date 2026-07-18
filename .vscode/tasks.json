@@ -2,6 +2,48 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Runner: Drive",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup drive.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Map",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup map.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Full",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup full.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Sensors",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup sensors.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Localization",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup localization.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: Teleop",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup teleop.launch.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Runner: TF Static",
+      "type": "shell",
+      "command": "ros2 launch runner_bringup tf_static.launch.py",
+      "problemMatcher": []
+    },
+    {
       "label": "Runner: Lidar",
       "type": "shell",
       "command": "ros2 launch runner_bringup lidar.launch.py",
@@ -35,63 +77,6 @@
       "label": "Runner: SLAM",
       "type": "shell",
       "command": "ros2 launch runner_bringup slam.launch.py",
-      "problemMatcher": []
-    },
-    {
-      "label": "Runner: TF Static",
-      "type": "shell",
-      "command": "ros2 launch runner_bringup tf_static.launch.py",
-      "problemMatcher": []
-    },
-    {
-      "label": "Runner: Map",
-      "type": "shell",
-      "command": "ros2 launch runner_bringup map.launch.py",
-      "problemMatcher": []
-    },
-    {
-      "label": "Runner: Drive",
-      "type": "shell",
-      "command": "ros2 launch runner_bringup drive.launch.py",
-      "problemMatcher": []
-    },
-    {
-      "label": "Runner: Battery",
-      "type": "shell",
-      "command": "source /opt/ros/jazzy/setup.bash && source ~/runner_ws/install/setup.bash && ros2 run runner_battery battery_node",
-      "presentation": {
-        "panel": "dedicated",
-        "reveal": "always",
-        "focus": false,
-        "clear": true,
-        "showReuseMessage": false
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Runner: Foxglove",
-      "type": "shell",
-      "command": "source /opt/ros/jazzy/setup.bash && source ~/runner_ws/install/setup.bash && ros2 launch foxglove_bridge foxglove_bridge_launch.xml",
-      "presentation": {
-        "panel": "dedicated",
-        "reveal": "always",
-        "focus": false,
-        "clear": true,
-        "showReuseMessage": false
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Runner: Stop All",
-      "type": "shell",
-      "command": "source /opt/ros/jazzy/setup.bash && pkill -f 'ros2 launch' || true; pkill -f 'ros2 run' || true; pkill -f rf2o || true; pkill -f slam_toolbox || true; pkill -f ldlidar || true; pkill -f foxglove || true; sleep 1 && ros2 daemon stop && ros2 daemon start; ros2 node list",
-      "presentation": {
-        "panel": "dedicated",
-        "reveal": "always",
-        "focus": false,
-        "clear": true,
-        "showReuseMessage": false
-      },
       "problemMatcher": []
     }
   ]

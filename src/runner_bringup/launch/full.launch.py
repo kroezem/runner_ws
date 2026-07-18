@@ -20,5 +20,7 @@ def generate_launch_description():
         IncludeLaunchDescription(PythonLaunchDescriptionSource(
             os.path.join(launch_dir, 'sensors.launch.py'))),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(
+            os.path.join(launch_dir, 'teleop.launch.py'))),
+        IncludeLaunchDescription(PythonLaunchDescriptionSource(
             os.path.join(launch_dir, 'localization.launch.py'))),
     ])

@@ -1,7 +1,3 @@
-# drive.launch.py, map.launch.py, and full.launch.py are mutually exclusive.
-# Running two at once double-instantiates the sensor drivers and corrupts both
-# serial ports.
-
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -18,7 +14,9 @@ def generate_launch_description():
 
     return LaunchDescription([
         IncludeLaunchDescription(PythonLaunchDescriptionSource(
-            os.path.join(launch_dir, 'sensors.launch.py'))),
+            os.path.join(launch_dir, 'tf_static.launch.py'))),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(
-            os.path.join(launch_dir, 'localization.launch.py'))),
+            os.path.join(launch_dir, 'lidar.launch.py'))),
+        IncludeLaunchDescription(PythonLaunchDescriptionSource(
+            os.path.join(launch_dir, 'imu.launch.py'))),
     ])
