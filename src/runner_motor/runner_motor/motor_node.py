@@ -7,6 +7,7 @@ from periphery import PWM
 PWM_CHIP   = 0             # verify with: ls /sys/class/pwm/ after adding overlay
                            # change to 2 if pwmchip2 is the RP1 controller on your Pi 5
 FRAME_NS   = 20_000_000   # 50 Hz
+CMD_TIMEOUT_S = 0.2
 
 NEUTRAL_US = 1500          # ESC neutral — no movement
 THR_MAX_US = 2000          # conservative cap for early testing; raise toward 2000 for speed
@@ -29,6 +30,9 @@ class MotorNode(Node):
         self.servo.enable()
         self._arm_esc()
         self.create_subscription(Twist, "/cmd_vel", self.on_cmd, 10)
+        self._last_cmd = time.monotonic()
+        self._cmd_timed_out = False
+        self.create_timer(0.05, self._watchdog)
         self.get_logger().info("motor_driver ready")
 
     def _arm_esc(self):
@@ -43,6 +47,10 @@ class MotorNode(Node):
         self.servo.duty_cycle_ns = us_to_ns(steer_us)
 
     def on_cmd(self, msg: Twist):
+        if self._cmd_timed_out:
+            self.get_logger().info("/cmd_vel recovered")
+            self._cmd_timed_out = False
+        self._last_cmd = time.monotonic()
         cmd = max(-1.0, min(1.0, msg.linear.x))
         if cmd > 0.0:
             # throttle: neutral → THR_MAX_US
@@ -55,6 +63,14 @@ class MotorNode(Node):
 
         steer_us = int(STEER_CTR + max(-1.0, min(1.0, msg.angular.z)) * STEER_US)
         self._write(thr_us, steer_us)
+
+    def _watchdog(self):
+        if time.monotonic() - self._last_cmd <= CMD_TIMEOUT_S:
+            return
+        if not self._cmd_timed_out:
+            self.get_logger().warn("/cmd_vel watchdog timeout; ESC set to neutral")
+            self._cmd_timed_out = True
+        self._write(NEUTRAL_US, STEER_CTR)
 
     def stop(self):
         self._write(NEUTRAL_US, STEER_CTR)
@@ -72,4 +88,5 @@ def main():
         pass
     finally:
         node.stop()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
