@@ -2,6 +2,7 @@ import fcntl
 import math
 import os
 
+import gpiod
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import BatteryState
@@ -10,6 +11,7 @@ from sensor_msgs.msg import BatteryState
 I2C_SLAVE = 0x0703
 I2C_DEVICE = '/dev/i2c-1'
 I2C_ADDRESS = 0x36
+PLD_GPIO = 6
 
 
 class BatteryNode(Node):
@@ -18,6 +20,10 @@ class BatteryNode(Node):
         self.publisher = self.create_publisher(BatteryState, '/battery', 10)
         self.i2c = os.open(I2C_DEVICE, os.O_RDWR)
         fcntl.ioctl(self.i2c, I2C_SLAVE, I2C_ADDRESS)
+        self.gpio_chip = gpiod.Chip('gpiochip0')
+        self.pld_line = self.gpio_chip.get_line(PLD_GPIO)
+        self.pld_line.request(
+            consumer='battery_pld', type=gpiod.LINE_REQ_DIR_IN)
         self.timer = self.create_timer(1.0, self.publish_battery)
 
     def destroy_node(self):
@@ -46,6 +52,14 @@ class BatteryNode(Node):
         message.current = math.nan
         message.charge = math.nan
         message.percentage = min(soc[0], 100) / 100.0
+        message.present = True
+        if self.pld_line.get_value() == 0:
+            message.power_supply_status = \
+                BatteryState.POWER_SUPPLY_STATUS_DISCHARGING
+        elif message.percentage >= 0.95:
+            message.power_supply_status = BatteryState.POWER_SUPPLY_STATUS_FULL
+        else:
+            message.power_supply_status = BatteryState.POWER_SUPPLY_STATUS_CHARGING
         message.power_supply_technology = BatteryState.POWER_SUPPLY_TECHNOLOGY_LION
         self.publisher.publish(message)
 
