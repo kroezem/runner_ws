@@ -70,7 +70,7 @@ class MotorNode(Node):
         if not self._cmd_timed_out:
             self.get_logger().warn("/cmd_vel watchdog timeout; ESC set to neutral")
             self._cmd_timed_out = True
-        self._write(NEUTRAL_US, STEER_CTR)
+        self.esc.duty_cycle_ns = us_to_ns(NEUTRAL_US)
 
     def stop(self):
         self._write(NEUTRAL_US, STEER_CTR)

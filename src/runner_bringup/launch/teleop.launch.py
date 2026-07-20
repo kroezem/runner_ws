@@ -16,7 +16,6 @@ def generate_launch_description():
                 'axis_steer': 0,
                 'axis_brake': 2,
                 'axis_throttle': 5,
-                'deadman_button': 5,
             }],
         ),
         Node(package='runner_motor', executable='motor_node'),
