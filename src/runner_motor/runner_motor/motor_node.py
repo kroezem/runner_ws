@@ -23,12 +23,13 @@ STEER_US   = 500           # ± range around centre
 def us_to_ns(us): return int(us * 1000)
 
 def map_esc_input(magnitude, onset_us, limit_us):
-    magnitude = magnitude ** EXPO
     if magnitude == 0.0:
         return NEUTRAL_US
     if magnitude <= CROSS_FRAC:
         return int(NEUTRAL_US + magnitude / CROSS_FRAC * (onset_us - NEUTRAL_US))
-    return int(onset_us + (magnitude - CROSS_FRAC) / (1.0 - CROSS_FRAC) * (limit_us - onset_us))
+    u = (magnitude - CROSS_FRAC) / (1.0 - CROSS_FRAC)
+    u_shaped = u ** EXPO
+    return int(onset_us + u_shaped * (limit_us - onset_us))
 
 class MotorNode(Node):
     def __init__(self):
