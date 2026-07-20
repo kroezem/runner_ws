@@ -10,6 +10,9 @@ FRAME_NS   = 20_000_000   # 50 Hz
 CMD_TIMEOUT_S = 0.2
 
 NEUTRAL_US = 1500          # ESC neutral — no movement
+FWD_ONSET_US = 1550
+REV_ONSET_US = 1450
+CROSS_FRAC = 0.05
 THR_MAX_US = 2000          # conservative cap for early testing; raise toward 2000 for speed
 BRK_MAX_US = 1000          # full brake
 
@@ -17,6 +20,13 @@ STEER_CTR  = 1500          # servo centre
 STEER_US   = 500           # ± range around centre
 
 def us_to_ns(us): return int(us * 1000)
+
+def map_esc_input(magnitude, onset_us, limit_us):
+    if magnitude == 0.0:
+        return NEUTRAL_US
+    if magnitude <= CROSS_FRAC:
+        return int(NEUTRAL_US + magnitude / CROSS_FRAC * (onset_us - NEUTRAL_US))
+    return int(onset_us + (magnitude - CROSS_FRAC) / (1.0 - CROSS_FRAC) * (limit_us - onset_us))
 
 class MotorNode(Node):
     def __init__(self):
@@ -53,11 +63,9 @@ class MotorNode(Node):
         self._last_cmd = time.monotonic()
         cmd = max(-1.0, min(1.0, msg.linear.x))
         if cmd > 0.0:
-            # throttle: neutral → THR_MAX_US
-            thr_us = int(NEUTRAL_US + cmd * (THR_MAX_US - NEUTRAL_US))
+            thr_us = map_esc_input(cmd, FWD_ONSET_US, THR_MAX_US)
         elif cmd < -0.05:
-            # brake: neutral → BRK_MAX_US
-            thr_us = int(NEUTRAL_US + cmd * (NEUTRAL_US - BRK_MAX_US))
+            thr_us = map_esc_input(-cmd, REV_ONSET_US, BRK_MAX_US)
         else:
             thr_us = NEUTRAL_US
 
