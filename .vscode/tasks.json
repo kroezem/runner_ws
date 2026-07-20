@@ -82,7 +82,7 @@
     {
       "label": "Stop all launches",
       "type": "shell",
-      "command": "for pid in $(pgrep -f '(^|/)[r]os2 launch '); do if ! grep -Eq '/system[.]slice/runner-(foxglove|battery)[.]service($|/)' /proc/$pid/cgroup; then ps -o pgid= -p $pid | awk '{print $1}'; fi; done | sort -u | xargs -r -n1 sh -c 'kill -TERM -- -$1' _",
+      "command": "pkill -INT -f '[r]os2 launch runner_bringup ' || true",
       "problemMatcher": []
     },
     {
