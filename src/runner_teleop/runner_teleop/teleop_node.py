@@ -20,13 +20,16 @@ class TeleopNode(Node):
         self.declare_parameter("axis_steer", 0)
         self.declare_parameter("axis_brake", 2)
         self.declare_parameter("axis_throttle", 5)
+        self.declare_parameter("deadman_button", 0)
         self._axis_steer = self.get_parameter("axis_steer").value
         self._axis_brake = self.get_parameter("axis_brake").value
         self._axis_throttle = self.get_parameter("axis_throttle").value
+        self._deadman_button = self.get_parameter("deadman_button").value
         self._steer = 0.0
         self._cmd   = 0.0
         self.get_logger().info(
-            "runner_teleop ready  |  L-stick=steer  R2=throttle  L2=brake")
+            "runner_teleop ready  |  L-stick=steer  R2=throttle  L2=brake  "
+            f"dead-man button index={self._deadman_button}")
 
     def on_joy(self, msg: Joy):
         if max(self._axis_steer, self._axis_brake, self._axis_throttle) >= len(msg.axes):
@@ -38,7 +41,15 @@ class TeleopNode(Node):
         self._steer = msg.axes[self._axis_steer] * (-1.0 if INVERT_STEER else 1.0)
         throttle = _trigger(throttle_raw)
         brake = _trigger(brake_raw)
-        self._cmd = -brake if brake > THROTTLE_DEADZONE else throttle
+        deadman_held = (
+            0 <= self._deadman_button < len(msg.buttons)
+            and msg.buttons[self._deadman_button] == 1
+        )
+        self._cmd = (
+            -brake if brake > THROTTLE_DEADZONE
+            else throttle if deadman_held
+            else 0.0
+        )
 
     def publish_cmd(self):
         msg = Twist()

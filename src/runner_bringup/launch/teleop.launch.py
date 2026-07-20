@@ -16,6 +16,9 @@ def generate_launch_description():
                 'axis_steer': 0,
                 'axis_brake': 2,
                 'axis_throttle': 5,
+                # DualSense X is buttons[0] on the standard hid-playstation map;
+                # confirm the index against /joy for the connected controller.
+                'deadman_button': 0,
             }],
         ),
         Node(package='runner_motor', executable='motor_node'),
