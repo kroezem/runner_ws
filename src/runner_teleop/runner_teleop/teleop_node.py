@@ -46,7 +46,7 @@ class TeleopNode(Node):
             and msg.buttons[self._deadman_button] == 1
         )
         self._cmd = (
-            -brake if brake > THROTTLE_DEADZONE
+            -brake if deadman_held and brake > THROTTLE_DEADZONE
             else throttle if deadman_held
             else 0.0
         )

@@ -13,8 +13,9 @@ NEUTRAL_US = 1500          # ESC neutral — no movement
 FWD_ONSET_US = 1550
 REV_ONSET_US = 1450
 CROSS_FRAC = 0.05
-THR_MAX_US = 2000          # conservative cap for early testing; raise toward 2000 for speed
-BRK_MAX_US = 1000          # full brake
+EXPO = 2.0
+THR_MAX_US = 1750
+BRK_MAX_US = 1250
 
 STEER_CTR  = 1500          # servo centre
 STEER_US   = 500           # ± range around centre
@@ -22,6 +23,7 @@ STEER_US   = 500           # ± range around centre
 def us_to_ns(us): return int(us * 1000)
 
 def map_esc_input(magnitude, onset_us, limit_us):
+    magnitude = magnitude ** EXPO
     if magnitude == 0.0:
         return NEUTRAL_US
     if magnitude <= CROSS_FRAC:
@@ -46,9 +48,9 @@ class MotorNode(Node):
         self.get_logger().info("motor_driver ready")
 
     def _arm_esc(self):
-        self._write(BRK_MAX_US, STEER_CTR)  # low signal to wake ESC
+        self._write(NEUTRAL_US, STEER_CTR)
         time.sleep(1.0)
-        self._write(NEUTRAL_US, STEER_CTR)  # back to neutral
+        self._write(NEUTRAL_US, STEER_CTR)
         time.sleep(1.0)
         self.get_logger().info("ESC armed")
 
