@@ -35,7 +35,7 @@ class Bno085Node(Node):
             self.bno.enable_feature(f)
 
     def _hardware_reset(self):
-        chip = gpiod.Chip("gpiochip0")
+        chip = gpiod.Chip("pinctrl-rp1", gpiod.Chip.OPEN_BY_LABEL)
         line = chip.get_line(RESET_GPIO)
         line.request(consumer="bno_rst", type=gpiod.LINE_REQ_DIR_OUT, default_vals=[0])
         time.sleep(0.02)
