@@ -75,7 +75,8 @@ def _parse_args():
 
 def _main():
     args = _parse_args()
-    chip = lgpio.gpiochip_open(0)
+    # RP1 header bank (verify with gpiodetect: pinctrl-rp1); chip 0 is internal brcmstb.
+    chip = lgpio.gpiochip_open(4)
     callback = None
     terminal_settings = None
     end_time = time.monotonic()
