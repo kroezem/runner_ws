@@ -29,6 +29,9 @@ setup(
         ],
     },
     entry_points={
-        'console_scripts': [],
+        'console_scripts': [
+            'rf2o_scan_canonicalizer = '
+            'runner_bringup.rf2o_scan_canonicalizer:main',
+        ],
     },
 )
