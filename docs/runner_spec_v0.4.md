@@ -1,6 +1,6 @@
 # Runner — Architecture & Current-State Specification
 
-**Version 0.3** · supersedes `runner_spec_2026-07-03` (v0.2) · 2026-07-19
+**Version 0.4** · supersedes v0.3 · 2026-07-21
 Mattias Kroeze · MSc Autonomous Systems, DTU
 Autonomous 1/18-scale RC research platform
 
@@ -34,10 +34,11 @@ Phase names describe intent, not a schedule. Phase 0 is bring-up — getting the
 
 **Phase 0 remaining, in order**
 
-1. Design and build crash protection (halo). *In progress — measurement/design started.*
-2. Wire up and test the wheel encoder (hardware validated, currently unplugged). Requires: pick GPIO pin, run `calibrate_hall_edges.py`, then write the encoder node.
-3. Resolve/validate the EKF translation bug (likely already fixed by TF correction; unverified).
-4. Achieve working SLAM localization — the Phase 0 exit gate.
+1. Design and build crash protection (halo). *In progress.*
+2. EKF translation-freeze retest on the corrected stack. *Next — the only item before the gate.*
+3. Working SLAM localization — the Phase 0 exit gate.
+
+Wheel encoder (was item 2) is **done**: GPIO 22, calibrated 0.010282 m/edge, `runner_encoder` publishes signed `/wheel/odom` (unfused).
 
 ---
 
@@ -50,8 +51,8 @@ Phase names describe intent, not a schedule. Phase 0 is bring-up — getting the
 | Raspberry Pi 5 8GB | Ubuntu 24.04, ROS 2 Jazzy | — |
 | LD19 LiDAR | 10 Hz, 360°, scan window is occlusion datum | UART `/dev/ttyAMA0` @ 230400 |
 | BNO085 IMU | On-chip fusion, 50 Hz, GPIO 26 reset | UART `/dev/ttyAMA2` @ 3 Mbaud |
-| Hall encoder | US1881 bipolar latch, 8 magnets in spur gear | GPIO (pin TBD, unplugged) |
-| X1201 UPS HAT | 2×18650, compute power only | I2C 0x36, GPIO 6 state |
+| Hall encoder | US1881 bipolar latch, 8 magnets in spur gear; 0.010282 m/edge | GPIO 22, both edges |
+| X1201 UPS HAT | 2×18650, compute power only | I2C 0x36; GPIO 6 AC-loss (active-low); GPIO 16 charge-ctrl |
 | DualSense | Teleop controller | Bluetooth |
 
 Power domains are deliberately separated: **the X1201 UPS powers compute only; the stock NiMH traction pack powers the motor/ESC.** A brownout on one domain cannot take down the other.
@@ -77,6 +78,23 @@ Power domains are deliberately separated: **the X1201 UPS powers compute only; t
 - Stock motor, stock ESC, stock traction battery otherwise retained.
 - Differentials: reassembled and confirmed driving correctly. **Resolved.** (An earlier direction inversion cost an evening for lack of a reference photo — see D-07/D-10.)
 
+### 3.4 GPIO map & chip convention
+
+| GPIO | Pin | Owner | Function |
+|---|---|---|---|
+| 2 / 3 | 3 / 5 | UPS + battery | I2C1 — MAX17040 fuel gauge (0x36) |
+| 4 / 5 | 7 / 29 | IMU | UART2 → `/dev/ttyAMA2` (BNO085) |
+| 6 | 31 | UPS | AC-loss detect — active-low (low = AC loss, high = adapter OK) |
+| 12 | 32 | Motor | ESC PWM |
+| 13 | 33 | Motor | Steering PWM |
+| 14 / 15 | 8 / 10 | LiDAR | UART0 → `/dev/ttyAMA0` (LD19) |
+| 16 | 36 | UPS | Charge control — UPS-driven (low = enabled, high = disabled) |
+| 22 | 15 | Encoder | Hall latch, both edges |
+| 23 | 16 | reserved | Quadrature 2nd channel / UWB IRQ spare |
+| 26 | 37 | IMU | BNO085 reset (active-high pulse) |
+
+**Chip convention.** The Pi 5 40-pin header is `gpiochip4` / label `pinctrl-rp1` — **not** `gpiochip0`, which is the SoC-internal `gpio-brcmstb` bank. Opening chip 0 for a header pin drives a dead internal line. Open GPIO **by label** (`pinctrl-rp1`) so code survives Pi 5 chip renumbering across kernels. This was a systemic bug: the IMU reset (silent no-op — the BNO085 self-resets, so it went unnoticed) and the hall calibration both opened chip 0. Fixed in `629d316` (IMU) and `91c192b` (calibration).
+
 ---
 
 ## 4 · Software architecture
@@ -87,7 +105,8 @@ Power domains are deliberately separated: **the X1201 UPS powers compute only; t
 |---|---|---|
 | `runner_bringup` | — | Launch files, config, calibration scripts. No nodes. |
 | `runner_imu` | `bno085_node` | BNO085 → `/imu/data` @ 50 Hz; error count → `/imu/read_errors`. |
-| `runner_motor` | `motor_node` | `/cmd_vel` → ESC + steering PWM, with curve, arming, watchdog. |
+| `runner_motor` | `motor_node` | `/cmd_vel` → ESC + steering PWM, with curve, arming, watchdog; publishes `/motor/direction` (Int8). |
+| `runner_encoder` | `encoder_node` | Hall edges → signed `/wheel/odom` (nav_msgs/Odometry, unfused). |
 | `runner_teleop` | `teleop_node` | `/joy` → `/cmd_vel`, dead-man gated. |
 | `runner_battery` | `battery_node` | Fuel gauge → `/battery` @ 1 Hz (systemd service). |
 | `ldlidar_stl_ros2` | `ldlidar_..._node` | LD19 → `/scan` (third-party). |
@@ -143,6 +162,16 @@ RF2O can publish `odom→base_link` but is suppressed: `publish_tf: false` plus 
 
 Only velocities are fused, no absolute pose or orientation — appropriate given RF2O provides odometry and there is no absolute reference in Phase 0.
 
+### 4.6 Wheel encoder & direction
+
+Single-channel US1881 hall latch on GPIO 22, 8 magnets in the spur gear → 8 edges/rev. Calibrated at **0.010282 m/edge** (0.082255 m/spur-rev; ~97.3 edges/m). Count is speed-independent across the tested 20–26 Hz range → no missed edges, no slip. Honest uncertainty ±0.5%, tape- and rolling-radius-dominated.
+
+`encoder_node` (`runner_encoder`) counts edges in fixed 50 ms windows: `speed = edges × 0.010282 / 0.05`. A single-channel latch gives **unsigned** speed only; the sign is taken directly from `/motor/direction` each window — no rest-gating. Published as `nav_msgs/Odometry` on `/wheel/odom` (twist.linear.x only; pose and all other components untrusted via large covariance). **Not fused into the EKF** — that is Phase 1 (add as `odom1`, vx only).
+
+**Sign source.** `motor_node` publishes `/motor/direction` (`std_msgs/Int8`, −1/0/+1) as a pure observer, emitted at the ESC pulse write. Its FSM (STOP/FWD/BRAKE/REV) reports **BRAKE = +1**, so a decelerating-but-still-forward car is signed correctly through the whole brake. Reverse is only reachable from a stop.
+
+**Known limitation.** A pre-stop release-and-repress into reverse can briefly sign a still-coasting-forward car as reverse — a sub-creep-floor cosmetic error on an unfused topic. True low-speed signed direction requires a second hall channel (quadrature, GPIO 23) — the ratified Phase 1 upgrade. A rest-gate on the sign flip was tried and reverted: no single stationary-timeout satisfies both sign-correctness (wants long) and responsiveness (wants short). VESC/brushless is explicitly off the table.
+
 ---
 
 ## 5 · Teleop & motor control
@@ -195,8 +224,11 @@ Measured motor onset (wheels-up): forward whines at ~1550 µs, reverse at ~1450 
 ## 7 · Open items & known issues
 
 - **Crash protection (halo):** not designed, not built. Measurement in progress. Must anchor to suspension towers via socketed legs (not shell posts — too compliant), with a sacrificial shear element so failure is binary and the mount extrinsics can't be silently corrupted.
-- **Wheel encoder node:** hardware validated and on-car but unplugged. GPIO pin must be selected. `calibrate_hall_edges.py` exists; the encoder *node* does not. Sign of velocity must come from the motor state machine (single-channel latch gives unsigned speed); hand-push mapping is a scope boundary where RF2O owns odometry.
-- **EKF translation freeze:** not validated as fixed. Strongly suspected to have been caused by the garbage v0.2 TF config (base_laser mis-rooted, 132 mm off). Retest on the corrected stack before treating as resolved.
+- **Wheel encoder:** done — GPIO 22, calibrated, `runner_encoder` publishing unfused `/wheel/odom`. EKF fusion deferred to Phase 1 (`odom1`, vx). Sign carries a logged sub-creep-floor error; quadrature (GPIO 23) is the Phase 1 fix.
+- **EKF translation freeze:** not validated as fixed. Strongly suspected to have been caused by the garbage v0.2 TF config (base_laser mis-rooted, 132 mm off). Retest on the corrected stack before treating as resolved. *This is the current next task.*
+- **IMU reset now live:** the GPIO 26 reset was a silent no-op (wrong chip bank) until this session; it now actually pulses the BNO085 on launch. Confirm `/imu/data` streams clean before leaning on it in the EKF retest.
+- **GPIO 6 AC-loss confirmed working** on chip 4 (active-low). The earlier "non-functional" verdict was the chip-0 bug, not a dead pin. Un-revert `24e5ad4` when the battery node is reworked to read source status and add low-voltage shutdown against the 3.20 V floor.
+- **flake8 has no exclude config** — 861 pre-existing hits are mostly build/generated artifacts. Add a `setup.cfg`/`.flake8` exclude so lint is a usable signal. Low priority.
 - **`rf2o_laser_odometry` is a forked gitlink with no `.gitmodules` mapping.** The fork carries the `/tf → /tf_disabled` remap. Vendored fork by accident; formalize it or it becomes a "works on my Pi" landmine.
 - **`x120x` is an untracked nested repo at workspace root** (suptronics UPS tooling). Decide whether to vendor or ignore it explicitly.
 - **UPS discharge rate unmodeled.** Do not extrapolate runtime from two points on the Li-ion voltage plateau — log a full session and find the knee.
@@ -219,6 +251,13 @@ Append-only. Each entry records a decision that diverges from the obvious defaul
 | D-08 | `THR_MAX` capped at 1750 for Phase 0 | SLAM sensitivity + bench margin; raise later by telemetry. |
 | D-09 | Motor watchdog is the primary safety layer | Survives upstream process death; dead-man cannot. |
 | D-10 | Photograph subassemblies before closing them up | Diff inversion cost an evening for lack of a reference. |
+| D-11 | Encoder on GPIO 22; GPIO 23 reserved (quadrature / UWB-IRQ); GPIO 16 is UPS-owned charge control | 22/23 freed from the retired walking-cane build; 16 found UPS-driven in the X1201 wiki and logged before it bit. |
+| D-12 | Pi 5 header GPIO is `gpiochip4` / `pinctrl-rp1`; open by label | Chip 0 is the internal brcmstb bank — opening it drove dead lines (IMU reset no-op, calibration). By-label survives kernel renumbering. |
+| D-13 | `motor_node` publishes `/motor/direction` (Int8, −1/0/+1) as a pure observer; BRAKE = +1 | Single-channel encoder needs an external sign; FSM emits actual commanded direction at the pulse write. BRAKE = +1 keeps braking sign-correct. |
+| D-14 | Encoder signs directly from `/motor/direction`, no rest-gate | No single stationary-timeout serves both sign-correctness (wants long) and responsiveness (wants short); the gate made the common case worse. Residual error is cosmetic on an unfused topic. |
+| D-15 | Encoder sign kept independent of RF2O | Deriving sign from RF2O couples the backup to the source it exists to cross-check; the EKF is the correct layer to arbitrate disagreement. |
+| D-16 | Quadrature (GPIO 23) is the Phase 1 true-direction path; VESC stays off the table | The hall sensor was chosen specifically to avoid VESC/brushless cost. Quadrature adds a more-independent direction source, not less. |
+| D-17 | GPIO 6 AC-loss detection confirmed functional; un-revert `24e5ad4` | The "non-functional" verdict was the chip-0 bug, not a dead pin — it toggles on chip 4. Polarity active-low. |
 
 ---
 
