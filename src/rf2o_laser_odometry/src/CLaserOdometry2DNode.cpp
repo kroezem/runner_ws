@@ -46,6 +46,8 @@ CLaserOdometry2DNode::CLaserOdometry2DNode(): Node("CLaserOdometry2DNode")
   tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*buffer_);
   odom_broadcaster = std::make_unique<tf2_ros::TransformBroadcaster>(this);
   odom_pub  = this->create_publisher<nav_msgs::msg::Odometry>(odom_topic, 5);
+  diag_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
+      "/rf2o/diag", rclcpp::QoS(rclcpp::KeepLast(10)).best_effort());
   laser_sub = this->create_subscription<sensor_msgs::msg::LaserScan>(laser_scan_topic,rclcpp::QoS(rclcpp::KeepLast(1)).best_effort().durability_volatile(),
       std::bind(&CLaserOdometry2DNode::LaserCallBack, this, std::placeholders::_1));
   
@@ -171,6 +173,29 @@ void CLaserOdometry2DNode::process()
   {
     // Process odometry estimation
     rf2o_ref.odometryCalculation(last_scan);
+
+    // /rf2o/diag layout [22 floats]:
+    // [0]      valid_flag (1.0 if solve valid this cycle else 0.0)
+    // [1]      dt  (getLastDt)
+    // [2]      N   (getLastValidPoints)
+    // [3]      SSE (getLastSSE, unweighted)
+    // [4..12]  cov_odo raw 3x3 row-major (getIncrementCovariance), order vx,vy,wz
+    // [13..21] AtA 3x3 row-major (getLastAtA), weighted information matrix
+    std_msgs::msg::Float64MultiArray diag;
+    diag.data.reserve(22);
+    diag.data.push_back(rf2o_ref.getLastSolveValid() ? 1.0 : 0.0);
+    diag.data.push_back(rf2o_ref.getLastDt());
+    diag.data.push_back(static_cast<double>(rf2o_ref.getLastValidPoints()));
+    diag.data.push_back(static_cast<double>(rf2o_ref.getLastSSE()));
+    const auto& covariance = rf2o_ref.getIncrementCovariance();
+    const auto& information = rf2o_ref.getLastAtA();
+    for (int row = 0; row < 3; ++row)
+      for (int col = 0; col < 3; ++col)
+        diag.data.push_back(static_cast<double>(covariance(row, col)));
+    for (int row = 0; row < 3; ++row)
+      for (int col = 0; col < 3; ++col)
+        diag.data.push_back(static_cast<double>(information(row, col)));
+    diag_pub_->publish(diag);
 
     // Publish odometry over ROS2 (tf/topic)
     publish();

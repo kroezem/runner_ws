@@ -1,5 +1,7 @@
 #include "rf2o_laser_odometry/CLaserOdometry2D.hpp"
 
+#include <std_msgs/msg/float64_multi_array.hpp>
+
 #include <tf2/convert.h>
 #include <tf2/exceptions.h>
 #include <tf2_ros/transform_broadcaster.h>
@@ -41,9 +43,9 @@ public:
   rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr  laser_sub;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr      initPose_sub;
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr         odom_pub;
+  rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr diag_pub_;
 
   // CallBacks
   void LaserCallBack(const sensor_msgs::msg::LaserScan::SharedPtr new_scan);
   void initPoseCallBack(const nav_msgs::msg::Odometry::SharedPtr new_initPose);
 };
-

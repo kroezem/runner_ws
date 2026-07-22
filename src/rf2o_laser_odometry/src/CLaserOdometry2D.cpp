@@ -258,6 +258,7 @@ bool CLaserOdometry2D::odometryCalculation(const sensor_msgs::msg::LaserScan& sc
     }
     else
     {
+      last_solve_valid_ = false;
       /// @todo At initialization something
       /// isn't properly initialized so that
       /// uninitialized values get propagated
@@ -643,6 +644,10 @@ void CLaserOdometry2D::solveSystemOneLevel()
   //Covariance matrix calculation 	Cov Order -> vx,vy,wz
   Eigen::MatrixXf res(num_valid_range,1);
   res = A*Var - B;
+  last_valid_points_ = num_valid_range;
+  last_sse_ = res.squaredNorm();
+  last_AtA_ = AtA;
+  last_solve_valid_ = true;
   cov_odo = (1.f/float(num_valid_range-3))*AtA.inverse()*res.squaredNorm();
 
   kai_loc_level_ = Var;
@@ -738,6 +743,10 @@ void CLaserOdometry2D::solveSystemNonLinear()
     //printf("\nEnergy(%d) = %f", i, energy);
   }
 
+  last_valid_points_ = num_valid_range;
+  last_sse_ = res.squaredNorm();
+  last_AtA_ = AtA;
+  last_solve_valid_ = true;
   cov_odo = (1.f/float(num_valid_range-3))*AtA.inverse()*res.squaredNorm();
   kai_loc_level_ = Var;
 
@@ -984,6 +993,7 @@ void CLaserOdometry2D::PoseUpdate()
   // last_odom_time -> The time of the previous scan lasser used to estimate the pose
   //-------------------------------------------------------------------------------------
   double time_inc_sec = (current_scan_time - last_odom_time).seconds();
+  last_dt_ = time_inc_sec;
   last_odom_time = current_scan_time;
   lin_speed = acu_trans(0,2) / time_inc_sec;
   //double lin_speed = sqrt( mrpt::math::square(robot_oldpose.x()-robot_pose.x()) + mrpt::math::square(robot_oldpose.y()-robot_pose.y()) )/time_inc_sec;

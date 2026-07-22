@@ -89,6 +89,17 @@ public:
 
   const IncrementCov& getIncrementCovariance() const;
 
+  double last_dt_ = 0.0;
+  unsigned int last_valid_points_ = 0;
+  float last_sse_ = 0.0f;
+  IncrementCov last_AtA_ = IncrementCov::Zero();
+  bool last_solve_valid_ = false;
+  double getLastDt() const { return last_dt_; }
+  unsigned int getLastValidPoints() const { return last_valid_points_; }
+  float getLastSSE() const { return last_sse_; }
+  const IncrementCov& getLastAtA() const { return last_AtA_; }
+  bool getLastSolveValid() const { return last_solve_valid_; }
+
   Pose3d& getPose();
   const Pose3d& getPose() const;
   bool verbose, module_initialized, first_laser_scan;
