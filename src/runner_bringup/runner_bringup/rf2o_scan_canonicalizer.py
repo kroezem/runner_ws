@@ -1,4 +1,4 @@
-"""Canonicalize full-circle LaserScan angular origin for RF2O diagnostics."""
+"""Canonicalize a full-circle LaserScan angular origin for RF2O."""
 
 import math
 
@@ -14,7 +14,7 @@ class Rf2oScanCanonicalizer(Node):
     def __init__(self):
         super().__init__('rf2o_scan_canonicalizer')
         self.declare_parameter('input_topic', '/scan')
-        self.declare_parameter('output_topic', '/scan_rf2o_test')
+        self.declare_parameter('output_topic', '/scan_rf2o')
         input_topic = self.get_parameter('input_topic').value
         output_topic = self.get_parameter('output_topic').value
         self.publisher = self.create_publisher(
