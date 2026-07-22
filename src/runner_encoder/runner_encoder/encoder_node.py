@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import threading
-import time
 
 import lgpio
 from nav_msgs.msg import Odometry
@@ -33,20 +32,13 @@ class EncoderNode(Node):
         self.declare_parameter('gpio_pin', 22)
         self.declare_parameter('metres_per_edge', 0.010282)
         self.declare_parameter('window_ms', 50)
-        self.declare_parameter('stationary_timeout_ms', 500)
         self._gpio_pin = self.get_parameter('gpio_pin').value
         self._metres_per_edge = self.get_parameter('metres_per_edge').value
         self._window_ms = self.get_parameter('window_ms').value
-        self._stationary_timeout_ms = self.get_parameter(
-            'stationary_timeout_ms'
-        ).value
 
         self._edge_lock = threading.Lock()
         self._edge_count = 0
-        self._last_edge_time = None
-        self._direction = 0
         self._sign = 0
-        self._stationary = True
         self._chip = None
         self._gpio_callback = None
 
@@ -82,36 +74,23 @@ class EncoderNode(Node):
     def _on_edge(self, chip, gpio, level, tick):
         with self._edge_lock:
             self._edge_count += 1
-            self._last_edge_time = time.monotonic()
 
     def _on_direction(self, msg: Int8):
-        self._direction = max(-1, min(1, msg.data))
+        self._sign = msg.data
 
     def _publish_window(self):
         with self._edge_lock:
             edges = self._edge_count
             self._edge_count = 0
-            last_edge_time = self._last_edge_time
 
-        monotonic_now = time.monotonic()
-        timeout_s = self._stationary_timeout_ms / 1000.0
-        stationary = (
-            last_edge_time is None
-            or monotonic_now - last_edge_time > timeout_s
-        )
-
-        # One channel gives unsigned speed. Sample commanded direction only when
-        # motion resumes from rest, avoiding reverse sign during the brake window.
-        if stationary and not self._stationary:
-            self._sign = 0
-        elif not stationary and self._stationary and edges > 0:
-            self._sign = self._direction
-        self._stationary = stationary
-
-        # Stationary means below the timeout's creep floor (~2 cm/s by default).
+        # A single channel gives unsigned speed; take sign directly from the motor
+        # FSM. BRAKE is +1, so normal braking stays sign-correct. A pre-stop
+        # release/repress into reverse can briefly sign forward coast as reverse:
+        # cosmetic below the creep floor while unfused; true low-speed direction
+        # requires Phase 1 quadrature on GPIO 23.
         window_s = self._window_ms / 1000.0
-        speed_mps = edges * self._metres_per_edge / window_s
-        signed_speed = speed_mps * self._sign
+        window_speed = edges * self._metres_per_edge / window_s
+        signed_speed = window_speed * self._sign
 
         msg = Odometry()
         msg.header.stamp = self.get_clock().now().to_msg()
