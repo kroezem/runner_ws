@@ -254,6 +254,14 @@ void CLaserOdometry2DNode::publish()
   odom.twist.twist.linear.x = rf2o_ref.lin_speed;    //linear speed
   odom.twist.twist.linear.y = 0.0;
   odom.twist.twist.angular.z = rf2o_ref.ang_speed;   //angular speed
+  // Calibrated constant twist covariance. RF2O publishes zero (= infinite EKF confidence) by default.
+  // vx var 0.02 (std 0.14 m/s): from clean-driving RF2O-vs-wheel disagreement in bag cov_diag.
+  // vyaw var 0.25 (std 0.5 rad/s): deliberately loose. RF2O yaw lagged reality during the drift
+  // (reported phantom rotation ~28 sigma vs the independent IMU); the 50Hz gyro is the better yaw
+  // source, so RF2O yaw is kept only as a weak slow correction. Internal cov_odo is NOT used: it
+  // reacts 2-3 frames late and is non-specific (see cov_diag analysis).
+  odom.twist.covariance[0]  = 0.02;   // vx
+  odom.twist.covariance[35] = 0.25;   // vyaw (loose; IMU owns yaw)
   //publish the message
   odom_pub->publish(odom);
 
