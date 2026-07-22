@@ -119,8 +119,6 @@ class MotorNode(Node):
         self._write(NEUTRAL_US, STEER_CTR)
         self.esc.disable()
         self.servo.disable()
-        self.esc.close()
-        self.servo.close()
 
 def main():
     rclpy.init()
