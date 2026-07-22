@@ -98,7 +98,9 @@ void CLaserOdometry2DNode::LaserCallBack(const sensor_msgs::msg::LaserScan::Shar
     else
     {
       // Initialize module on first scan (from laser params)
-      setLaserPoseFromTf();
+      // Defer initialization until the laser extrinsic is available; a later scan retries.
+      if (!setLaserPoseFromTf())
+        return;
       rf2o_ref.init(last_scan, initial_robot_pose.pose.pose);
       rf2o_ref.first_laser_scan = false;
     }
@@ -122,8 +124,11 @@ bool CLaserOdometry2DNode::setLaserPoseFromTf()
   }
   catch (tf2::TransformException &ex)
   {
-    RCLCPP_ERROR(get_logger(), "%s",ex.what());
-    retrieved = false;
+    RCLCPP_WARN_THROTTLE(
+      get_logger(), *get_clock(), 5000,
+      "Waiting for laser transform %s -> %s: %s",
+      base_frame_id.c_str(), last_scan.header.frame_id.c_str(), ex.what());
+    return false;
   }
 
   // Keep this transform as Eigen Matrix3d
@@ -176,7 +181,8 @@ void CLaserOdometry2DNode::process()
   else
   {
     // This is a warning. We depend on laser scans, so no meaning running faster than scan freq.
-    RCLCPP_WARN(get_logger(), "Waiting for laser_scans....");
+    RCLCPP_WARN_THROTTLE(
+      get_logger(), *get_clock(), 5000, "Waiting for laser_scans....");
   }
 }
 
