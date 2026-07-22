@@ -47,7 +47,9 @@ def _print_summary(end_time):
 
     while True:
         try:
-            distance = float(input('Measured distance (m): '))
+            feet = float(input('Measured distance (ft): '))
+            inches = float(input('Measured distance, remaining (in): ') or 0)
+            distance = (feet * 12 + inches) * 0.0254
             if distance <= 0.0:
                 raise ValueError
             if count == 0:
