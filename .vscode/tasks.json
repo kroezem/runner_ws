@@ -5,24 +5,28 @@
       "label": "Runner: Drive",
       "type": "shell",
       "command": "ros2 launch runner_bringup drive.launch.py",
+      "dependsOn": "Stop all launches",
       "problemMatcher": []
     },
     {
       "label": "Runner: Map",
       "type": "shell",
       "command": "ros2 launch runner_bringup map.launch.py",
+      "dependsOn": "Stop all launches",
       "problemMatcher": []
     },
     {
       "label": "Runner: Full",
       "type": "shell",
       "command": "ros2 launch runner_bringup full.launch.py",
+      "dependsOn": "Stop all launches",
       "problemMatcher": []
     },
     {
       "label": "Runner: Sensors",
       "type": "shell",
       "command": "ros2 launch runner_bringup sensors.launch.py",
+      "dependsOn": "Stop all launches",
       "problemMatcher": []
     },
     {
@@ -80,9 +84,15 @@
       "problemMatcher": []
     },
     {
+      "label": "Runner: Encoder (standalone)",
+      "type": "shell",
+      "command": "ros2 run runner_encoder encoder_node",
+      "problemMatcher": []
+    },
+    {
       "label": "Stop all launches",
       "type": "shell",
-      "command": "pkill -INT -f '[r]os2 launch runner_bringup ' || true",
+      "command": "pkill -INT -f 'ros2 launch runner_bringup' ; pkill -INT -f motor_node ; sleep 1 ; sudo systemctl restart runner-pwm-setup.service || true",
       "problemMatcher": []
     },
     {
