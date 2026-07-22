@@ -1,6 +1,8 @@
-# drive.launch.py, map.launch.py, and full.launch.py are mutually exclusive.
-# Running two at once double-instantiates the sensor drivers and corrupts both
-# serial ports.
+# Single top-level launch for production teleoperation plus mapping.
+# Do not run it concurrently with drive.launch.py, map.launch.py,
+# sensors.launch.py, or any standalone localization launch: doing so duplicates
+# hardware drivers or localization publishers. The RF2O A/B diagnostic launch
+# is separate and must not run concurrently with this production stack.
 
 import os
 
