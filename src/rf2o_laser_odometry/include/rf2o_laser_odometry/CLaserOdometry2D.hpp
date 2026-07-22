@@ -99,6 +99,10 @@ public:
   float getLastSSE() const { return last_sse_; }
   const IncrementCov& getLastAtA() const { return last_AtA_; }
   bool getLastSolveValid() const { return last_solve_valid_; }
+  double getLastPyramidMs() const { return last_pyramid_ms_; }
+  double getLastWarpMs() const { return last_warp_ms_; }
+  double getLastSolveMs() const { return last_solve_ms_; }
+  double getLastPoseUpdateMs() const { return last_pose_update_ms_; }
 
   Pose3d& getPose();
   const Pose3d& getPose() const;
@@ -145,6 +149,12 @@ public:
   unsigned int num_valid_range;
   unsigned int iter_irls;
   float g_mask[5];
+
+  // Steady-clock stage timings for the most recent odometryCalculation().
+  double last_pyramid_ms_ = 0.0;
+  double last_warp_ms_ = 0.0;
+  double last_solve_ms_ = 0.0;
+  double last_pose_update_ms_ = 0.0;
 
   double lin_speed, ang_speed;
 

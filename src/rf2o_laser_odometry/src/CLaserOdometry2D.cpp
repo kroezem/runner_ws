@@ -17,6 +17,8 @@
 
 #include "rf2o_laser_odometry/CLaserOdometry2D.hpp"
 
+#include <chrono>
+
 namespace rf2o {
 
 
@@ -206,11 +208,19 @@ bool CLaserOdometry2D::odometryCalculation(const sensor_msgs::msg::LaserScan& sc
   // copy @param scan to internal variable (we already did it for the previous scan)
   range_wf = Eigen::Map<const Eigen::MatrixXf>(scan.ranges.data(), width, 1);
 
-  // Keep record of times
-  auto start = get_clock()->now();
+  using SteadyClock = std::chrono::steady_clock;
+  const auto elapsed_ms = [](const SteadyClock::time_point& start) {
+    return std::chrono::duration<double, std::milli>(SteadyClock::now() - start).count();
+  };
+  last_pyramid_ms_ = 0.0;
+  last_warp_ms_ = 0.0;
+  last_solve_ms_ = 0.0;
+  last_pose_update_ms_ = 0.0;
 
   // Create pyramid from current scan
+  auto stage_start = SteadyClock::now();
   createImagePyramid();
+  last_pyramid_ms_ = elapsed_ms(stage_start);
 
   // Coarse-to-fine scheme (pyramid lvls)
   for (unsigned int i=0; i<ctf_levels; i++)
@@ -233,7 +243,11 @@ bool CLaserOdometry2D::odometryCalculation(const sensor_msgs::msg::LaserScan& sc
       yy_warped[image_level]    = yy[image_level];
     }
     else
+    {
+      stage_start = SteadyClock::now();
       performWarping();
+      last_warp_ms_ += elapsed_ms(stage_start);
+    }
 
     // 2. Calculate inter coords
     calculateCoord();
@@ -253,7 +267,9 @@ bool CLaserOdometry2D::odometryCalculation(const sensor_msgs::msg::LaserScan& sc
     // 7. Solve odometry
     if (num_valid_range > 3)
     {
+      stage_start = SteadyClock::now();
       solveSystemNonLinear();
+      last_solve_ms_ += elapsed_ms(stage_start);
       //solveSystemOneLevel();    //without robust-function
     }
     else
@@ -272,13 +288,10 @@ bool CLaserOdometry2D::odometryCalculation(const sensor_msgs::msg::LaserScan& sc
     if (!filterLevelSolution()) return false;
   } // end pyramid lvls
 
-  // Get computation time 
-  auto m_runtime = get_clock()->now() - start;
-  RCLCPP_INFO(get_logger(), "execution time (ms): %f",
-                m_runtime.seconds()*double(1000));
-
   // Update poses with the new odom
+  stage_start = SteadyClock::now();
   PoseUpdate();
+  last_pose_update_ms_ = elapsed_ms(stage_start);
 
   return true;
 }
@@ -975,7 +988,7 @@ void CLaserOdometry2D::PoseUpdate()
   kai_loc_old_(1) = -kai_abs_(0)*std::sin(phi) + kai_abs_(1)*std::cos(phi);
   kai_loc_old_(2) =  kai_abs_(2);
 
-  RCLCPP_INFO(get_logger(), "Laser odom [x,y,yaw]=[%f %f %f]",
+  RCLCPP_DEBUG(get_logger(), "Laser odom [x,y,yaw]=[%f %f %f]",
                 laser_pose_.translation()(0),
                 laser_pose_.translation()(1),
                 rf2o::getYaw(laser_pose_.rotation()));
@@ -983,7 +996,7 @@ void CLaserOdometry2D::PoseUpdate()
   // Compose Transformations (robot odom)
   robot_pose_ = laser_pose_ * laser_pose_on_robot_inv_;
 
-  RCLCPP_INFO(get_logger(), "Robot-base odom [x,y,yaw]=[%f %f %f]",
+  RCLCPP_DEBUG(get_logger(), "Robot-base odom [x,y,yaw]=[%f %f %f]",
                 robot_pose_.translation()(0),
                 robot_pose_.translation()(1),
                 rf2o::getYaw(robot_pose_.rotation()));

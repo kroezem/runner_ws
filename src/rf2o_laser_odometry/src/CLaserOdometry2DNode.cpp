@@ -17,6 +17,22 @@
 
 #include "rf2o_laser_odometry/CLaserOdometry2DNode.hpp"
 
+#include <algorithm>
+#include <chrono>
+#include <cmath>
+#include <ctime>
+
+namespace {
+
+double threadCpuMilliseconds(const timespec& start, const timespec& finish)
+{
+  const double seconds = static_cast<double>(finish.tv_sec - start.tv_sec);
+  const double nanoseconds = static_cast<double>(finish.tv_nsec - start.tv_nsec);
+  return 1000.0 * seconds + nanoseconds / 1.0e6;
+}
+
+}  // namespace
+
 using namespace rf2o;
 
 CLaserOdometry2DNode::CLaserOdometry2DNode(): Node("CLaserOdometry2DNode")
@@ -171,18 +187,49 @@ void CLaserOdometry2DNode::process()
   // Do only run when a new scan is ready 
   if( rf2o_ref.is_initialized() && scan_available() )
   {
+    using SteadyClock = std::chrono::steady_clock;
+    const auto update_wall_start = SteadyClock::now();
+    timespec update_cpu_start{};
+    timespec update_cpu_finish{};
+    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &update_cpu_start);
+    const rclcpp::Time incoming_scan_stamp(last_scan.header.stamp);
+    const rclcpp::Time previous_scan_stamp = rf2o_ref.last_odom_time;
+    const double effective_scan_dt = (incoming_scan_stamp - previous_scan_stamp).seconds();
+    const std::size_t range_count = last_scan.ranges.size();
+    const std::size_t valid_range_count = std::count_if(
+      last_scan.ranges.begin(), last_scan.ranges.end(),
+      [](float range) { return std::isfinite(range); });
+
     // Process odometry estimation
     rf2o_ref.odometryCalculation(last_scan);
+    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &update_cpu_finish);
+    const double total_update_wall_ms =
+      std::chrono::duration<double, std::milli>(SteadyClock::now() - update_wall_start).count();
+    const double total_update_thread_cpu_ms =
+      threadCpuMilliseconds(update_cpu_start, update_cpu_finish);
+    const double publish_age_seconds = (now() - incoming_scan_stamp).seconds();
 
-    // /rf2o/diag layout [22 floats]:
+    // /rf2o/diag layout [34 floats]. Indices 0..21 retain their original meaning:
     // [0]      valid_flag (1.0 if solve valid this cycle else 0.0)
     // [1]      dt  (getLastDt)
     // [2]      N   (getLastValidPoints)
     // [3]      SSE (getLastSSE, unweighted)
     // [4..12]  cov_odo raw 3x3 row-major (getIncrementCovariance), order vx,vy,wz
     // [13..21] AtA 3x3 row-major (getLastAtA), weighted information matrix
+    // [22] total_update_wall_ms (steady clock, odometryCalculation including PoseUpdate)
+    // [23] total_update_thread_cpu_ms (CLOCK_THREAD_CPUTIME_ID over the same interval)
+    // [24] publish_age_seconds (incoming scan header stamp to imminent publication)
+    // [25] scan_range_count
+    // [26] valid_range_count (finite incoming ranges)
+    // [27] createImagePyramid_ms
+    // [28] performWarping_ms (sum over coarse-to-fine levels)
+    // [29] solveSystemNonLinear_ms (sum over coarse-to-fine levels)
+    // [30] PoseUpdate_ms
+    // [31] incoming_scan_stamp_seconds
+    // [32] previous_scan_stamp_seconds
+    // [33] effective_scan_dt_seconds (incoming minus previous stamp)
     std_msgs::msg::Float64MultiArray diag;
-    diag.data.reserve(22);
+    diag.data.reserve(34);
     diag.data.push_back(rf2o_ref.getLastSolveValid() ? 1.0 : 0.0);
     diag.data.push_back(rf2o_ref.getLastDt());
     diag.data.push_back(static_cast<double>(rf2o_ref.getLastValidPoints()));
@@ -195,7 +242,29 @@ void CLaserOdometry2DNode::process()
     for (int row = 0; row < 3; ++row)
       for (int col = 0; col < 3; ++col)
         diag.data.push_back(static_cast<double>(information(row, col)));
+    diag.data.push_back(total_update_wall_ms);
+    diag.data.push_back(total_update_thread_cpu_ms);
+    diag.data.push_back(publish_age_seconds);
+    diag.data.push_back(static_cast<double>(range_count));
+    diag.data.push_back(static_cast<double>(valid_range_count));
+    diag.data.push_back(rf2o_ref.getLastPyramidMs());
+    diag.data.push_back(rf2o_ref.getLastWarpMs());
+    diag.data.push_back(rf2o_ref.getLastSolveMs());
+    diag.data.push_back(rf2o_ref.getLastPoseUpdateMs());
+    diag.data.push_back(incoming_scan_stamp.seconds());
+    diag.data.push_back(previous_scan_stamp.seconds());
+    diag.data.push_back(effective_scan_dt);
     diag_pub_->publish(diag);
+
+    if (total_update_wall_ms > 200.0 || publish_age_seconds > 0.300)
+    {
+      RCLCPP_WARN_THROTTLE(
+        get_logger(), *get_clock(), 5000,
+        "Slow/stale RF2O update: scan_stamp=%.9f publish_age=%.3f s wall=%.3f ms "
+        "thread_cpu=%.3f ms ranges=%zu valid=%zu scan_dt=%.6f s",
+        incoming_scan_stamp.seconds(), publish_age_seconds, total_update_wall_ms,
+        total_update_thread_cpu_ms, range_count, valid_range_count, effective_scan_dt);
+    }
 
     // Publish odometry over ROS2 (tf/topic)
     publish();
